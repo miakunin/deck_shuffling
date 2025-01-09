@@ -1,36 +1,35 @@
-#!/usr/local/bin/python3
-
 import random
 
-# create a deck of 78 cards:
-deck = list(range(78))
+# Import the 3 functions
+from shuffle_functions import move_chunk_from_end, inversions_test, runs_test
 
-n = len(deck)
+def main():
 
-start = random.randint(11, 17) # pick random number (11-17)
-#start = 78
-#print(start)
+	deck = list(range(78)) # 78 cards deck
+	shuffles = 0
+	rand_test_1 = runs_test(deck)				# rand_test_1 should be 0, the deck is not shuffled
+	rand_test_2 = inversions_test(deck)	# same for rand_test_2
 
-while start > 0: # do until sub-deck is empty
+	while not (rand_test_1 == 1 and rand_test_2 == 1):
 
-	sub_deck = deck[n-start:] # create of a sub-deck of a random amount of cards from the end of the deck
-
-	print(sub_deck, "- sub-deck; length ", len(sub_deck))
-
-	k = random.randint(5, 7) # create a number for a shuffling stack
-	if k > len(sub_deck):
-		k = len(sub_deck)
-
-	print(k,"cards moved to the beginning of the deck")
-
-	chunk = deck[n - start : n - start + k] # pick shuffling stack
-	del deck[n - start : n - start + k]
-
-	deck[0:0] = chunk # move our shuffling chunk to start fo the deck
+		start = random.randint(25, 35) # here we randomly pick a sub-deck 
+		while start > 0:
+			deck, start = move_chunk_from_end(deck, start)
+			print(deck)
+			print(start, "new position\n")
 	
-	start = start - k # start position shifts towards the end of the deck
+		shuffles += 1
+		print(shuffles)
 
-	print(deck)
-	print(start,"new position")
-	print("")
+		rand_test_1 = runs_test(deck)
+		rand_test_2 = inversions_test(deck)
 
+	print("The deck was shuffled randomly after",shuffles,"number of iterations")	
+
+if __name__ == "__main__":
+	main()
+
+
+#TODO:
+# add return to main
+# write a wrapper to call this script and evaluate an average number of shuffles
